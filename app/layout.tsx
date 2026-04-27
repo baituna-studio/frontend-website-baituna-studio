@@ -9,6 +9,7 @@ import { AppHeader } from '@/components/layout/AppHeader';
 import { AppFooter } from '@/components/layout/AppFooter';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { MetaPixel } from '@/components/analytics/MetaPixel';
+import { WhatsAppFloat } from '@/components/ui/WhatsAppFloat';
 
 const inter = Inter({
   variable: '--font-inter',
@@ -18,6 +19,44 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Baituna Studio | Digital Products & Services',
   description: 'Download perlengkapan digital dan template desain premium untuk memajukan bisnis dan branding Anda.',
+  keywords: ['studio desain', 'template bisnis', 'produk digital', 'jasa desain UMKM', 'baituna studio'],
+  authors: [{ name: 'Baituna Studio' }],
+  creator: 'Baituna Studio',
+  publisher: 'Baituna Studio',
+  metadataBase: new URL('https://baitunastudio.biz.id'),
+  openGraph: {
+    type: 'website',
+    locale: 'id_ID',
+    url: 'https://baitunastudio.biz.id',
+    title: 'Baituna Studio | Solusi Kreatif Digital UMKM',
+    description: 'Download perlengkapan digital dan template desain premium untuk memajukan bisnis dan branding Anda. Ciptakan kesan profesional dalam hitungan menit.',
+    siteName: 'Baituna Studio',
+    images: [
+      {
+        url: '/og-image.png', // TBD: User should provide this
+        width: 1200,
+        height: 630,
+        alt: 'Baituna Studio - Premium Digital Products',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Baituna Studio | Digital Products & Services',
+    description: 'Download perlengkapan digital dan template desain premium untuk memajukan bisnis dan branding Anda.',
+    creator: '@baitunastudio',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -65,6 +104,7 @@ export default function RootLayout({
           <main className="flex-1">
             {children}
           </main>
+          <WhatsAppFloat />
           <AppFooter />
         </PrimeReactProvider>
       </body>

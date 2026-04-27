@@ -17,9 +17,9 @@ export default function Home() {
     <div className="flex flex-col w-full">
       <HeroSection />
       <FeaturedProductsSection />
-      <LatestBlogSection />
-      <TestimonialsHighlightSection />
       <WhyChooseSection />
+      <TestimonialsHighlightSection />
+      <LatestBlogSection />
       <FAQSection />
       <FinalCTASection />
     </div>
