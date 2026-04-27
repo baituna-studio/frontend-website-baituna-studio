@@ -24,6 +24,14 @@
     --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
     --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
     --shadow-premium: 0 20px 50px -12px rgba(99, 102, 241, 0.15);
+
+    /* Admin Tokens */
+    --admin-sidebar-bg: #0f172a;
+    --admin-sidebar-text: #94a3b8;
+    --admin-sidebar-text-active: #ffffff;
+    --admin-sidebar-active-bg: rgba(99, 102, 241, 0.15);
+    --admin-sidebar-active-bar: #6366f1;
+    --admin-sidebar-border: rgba(255, 255, 255, 0.06);
   }
 }
 

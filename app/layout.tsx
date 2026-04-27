@@ -46,6 +46,11 @@ export const metadata: Metadata = {
     description: 'Download perlengkapan digital dan template desain premium untuk memajukan bisnis dan branding Anda.',
     creator: '@baitunastudio',
   },
+  icons: {
+    icon: '/favicon.png',
+    shortcut: '/favicon.png',
+    apple: '/favicon.png',
+  },
   robots: {
     index: true,
     follow: true,

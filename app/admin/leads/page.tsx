@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -37,17 +38,27 @@ export default function AdminLeadsPage() {
   };
 
   return (
-    <div className="p-8">
-      <h1 className="text-3xl font-bold text-text-color mb-6">Manajemen Leads</h1>
-      <p className="text-text-color-secondary mb-8">Daftar kontak yang masuk melalui formulir di website.</p>
+    <div className="space-y-6">
+      <AdminPageHeader 
+        title="Manajemen Leads" 
+        description="Daftar kontak yang masuk melalui formulir di website." 
+      />
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-surface-section">
-        <DataTable value={leads} loading={loading} paginator rows={10} emptyMessage="Belum ada leads masuk.">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-surface-section overflow-hidden">
+        <DataTable 
+          value={leads} 
+          loading={loading} 
+          paginator 
+          rows={10} 
+          emptyMessage="Belum ada leads masuk."
+          className="p-datatable-sm"
+          tableStyle={{ minWidth: '50rem' }}
+        >
           <Column field="createdAt" header="Tanggal" sortable body={dateBodyTemplate}></Column>
           <Column field="name" header="Nama Lengkap" sortable></Column>
           <Column field="email" header="Email"></Column>
           <Column field="phone" header="WhatsApp" body={(r) => r.phone || '-'}></Column>
-          <Column field="message" header="Pesan"></Column>
+          <Column field="message" header="Pesan" className="max-w-[300px] truncate"></Column>
           <Column field="source" header="Sumber"></Column>
         </DataTable>
       </div>

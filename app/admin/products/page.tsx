@@ -12,6 +12,7 @@ import { InputSwitch } from 'primereact/inputswitch';
 import { Toast } from 'primereact/toast';
 import { ProgressSpinner } from 'primereact/progressspinner';
 import { TabView, TabPanel } from 'primereact/tabview';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -161,50 +162,53 @@ export default function AdminProductsPage() {
   };
 
   return (
-    <div className="p-8">
+    <div className="space-y-6">
       <Toast ref={toast} />
       
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-text-color">Manajemen Produk</h1>
-          <p className="text-text-color-secondary mt-1">Kelola data produk digital Anda.</p>
-        </div>
-        <Button label="Tambah Produk" icon="pi pi-plus" onClick={openNew} />
-      </div>
+      <AdminPageHeader 
+        title="Manajemen Produk" 
+        description="Kelola data produk digital Anda." 
+        action={
+          <Button label="Tambah Produk" icon="pi pi-plus" onClick={openNew} />
+        }
+      />
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-surface-section">
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-surface-section overflow-hidden">
         <DataTable value={products} loading={loading} paginator rows={10} dataKey="id" 
-          emptyMessage="Tidak ada produk ditemukan.">
-          <Column field="thumbnailUrl" header="Image" body={(r) => r.thumbnailUrl ? <img src={r.thumbnailUrl} className="w-16 h-16 object-cover rounded" /> : 'No image'}></Column>
-          <Column field="title" header="Judul Produk" sortable></Column>
+          emptyMessage="Tidak ada produk ditemukan."
+          className="p-datatable-sm"
+          tableStyle={{ minWidth: '60rem' }}
+        >
+          <Column field="thumbnailUrl" header="Image" body={(r) => r.thumbnailUrl ? <img src={r.thumbnailUrl} className="w-16 h-16 object-cover rounded shadow-sm" /> : <div className="w-16 h-16 bg-surface-ground rounded flex items-center justify-center"><i className="pi pi-image text-text-color-secondary opacity-30"></i></div>}></Column>
+          <Column field="title" header="Judul Produk" sortable className="font-bold"></Column>
           <Column field="category.name" header="Kategori" sortable body={(r) => r.category?.name || '-'}></Column>
           <Column field="price" header="Harga" sortable></Column>
-          <Column field="isFeatured" header="Highlight?" body={(r) => r.isFeatured ? 'Ya' : 'Tidak'}></Column>
+          <Column field="isFeatured" header="Highlight?" body={(r) => r.isFeatured ? <span className="text-amber-500 font-bold">Ya</span> : 'Tidak'}></Column>
           <Column field="isPublished" header="Status" body={statusBodyTemplate} sortable></Column>
           <Column body={actionBodyTemplate} exportable={false} style={{ minWidth: '8rem' }}></Column>
         </DataTable>
       </div>
 
-      <Dialog visible={dialogVisible} style={{ width: '600px' }} header={isEditing ? "Edit Produk" : "Tambah Produk"} modal onHide={() => setDialogVisible(false)}>
+      <Dialog visible={dialogVisible} style={{ width: '600px' }} header={isEditing ? "Edit Produk" : "Tambah Produk"} modal onHide={() => setDialogVisible(false)} className="p-fluid">
         <div className="flex flex-col gap-4 mt-2">
           
           <div className="flex flex-col gap-2">
-            <label className="font-semibold">Judul Produk</label>
+            <label className="font-semibold text-sm">Judul Produk</label>
             <InputText value={productData.title} onChange={(e) => setProductData({...productData, title: e.target.value})} />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-semibold">URL Slug (Kosongkan untuk auto-generate)</label>
+            <label className="font-semibold text-sm">URL Slug (Kosongkan untuk auto-generate)</label>
             <InputText value={productData.slug} onChange={(e) => setProductData({...productData, slug: e.target.value})} placeholder="Contoh: template-feed-1" />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="font-semibold">Short Deskripsi</label>
-              <InputTextarea value={productData.shortDescription || ''} onChange={(e) => setProductData({...productData, shortDescription: e.target.value})} rows={2} />
+              <label className="font-semibold text-sm">Short Deskripsi</label>
+              <InputTextarea value={productData.shortDescription || ''} onChange={(e) => setProductData({...productData, shortDescription: e.target.value})} rows={2} autoResize />
             </div>
             <div className="flex flex-col gap-2">
-              <label className="font-semibold">Kategori</label>
+              <label className="font-semibold text-sm">Kategori</label>
               <Dropdown 
                 value={productData.categoryId} 
                 onChange={(e) => setProductData({...productData, categoryId: e.value})} 
@@ -219,8 +223,8 @@ export default function AdminProductsPage() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-semibold">Deskripsi</label>
-            <TabView>
+            <label className="font-semibold text-sm">Deskripsi</label>
+            <TabView className="admin-tabview">
               <TabPanel header="Editor">
                 <InputTextarea 
                   value={productData.description || ''} 
@@ -232,57 +236,63 @@ export default function AdminProductsPage() {
               </TabPanel>
               <TabPanel header="Preview">
                 <div 
-                  className="p-4 border border-surface-200 rounded-md bg-surface-50 min-h-[200px] prose prose-sm max-w-none"
-                  dangerouslySetInnerHTML={{ __html: productData.description || '<p className="text-gray-400">Belum ada deskripsi...</p>' }}
+                  className="p-4 border border-surface-200 rounded-md bg-surface-ground min-h-[200px] prose prose-sm max-w-none"
+                  dangerouslySetInnerHTML={{ __html: productData.description || '<p class="text-gray-400">Belum ada deskripsi...</p>' }}
                 />
               </TabPanel>
             </TabView>
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="font-semibold">Harga (Teks)</label>
+              <label className="font-semibold text-sm">Harga (Teks)</label>
               <InputText value={productData.price || ''} onChange={(e) => setProductData({...productData, price: e.target.value})} placeholder="Rp 50.000" />
             </div>
             
             <div className="flex flex-col gap-2">
-              <label className="font-semibold">Urutan Tampil (Sort Order)</label>
+              <label className="font-semibold text-sm">Urutan Tampil (Sort Order)</label>
               <InputText type="number" value={productData.sortOrder} onChange={(e) => setProductData({...productData, sortOrder: parseInt(e.target.value) || 0})} />
             </div>
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-semibold">URL Checkout (Lynk.id)</label>
+            <label className="font-semibold text-sm">URL Checkout (Lynk.id)</label>
             <InputText value={productData.lynkUrl || ''} onChange={(e) => setProductData({...productData, lynkUrl: e.target.value})} />
           </div>
 
-          <div className="flex flex-col gap-2 border p-4 rounded-lg bg-surface-50">
-            <label className="font-semibold">Upload Gambar Thumbnail</label>
-            <input type="file" accept="image/*" onChange={handleImageUpload} disabled={uploadingImage} />
-            {uploadingImage && <div className="text-sm text-primary-color flex items-center gap-2 mt-2"><ProgressSpinner style={{width: '20px', height: '20px'}} /> Mengupload...</div>}
+          <div className="flex flex-col gap-2 border p-4 rounded-xl bg-surface-ground">
+            <label className="font-semibold text-sm">Upload Gambar Thumbnail</label>
+            <div className="flex items-center gap-4">
+              <label className="cursor-pointer bg-white border border-surface-section px-4 py-2 rounded-lg text-sm font-medium hover:bg-surface-section transition-colors flex items-center gap-2">
+                <i className="pi pi-upload"></i>
+                Pilih File
+                <input type="file" accept="image/*" className="hidden" onChange={handleImageUpload} disabled={uploadingImage} />
+              </label>
+              {uploadingImage && <div className="text-sm text-primary-color flex items-center gap-2"><ProgressSpinner style={{width: '20px', height: '20px'}} /> Mengupload...</div>}
+            </div>
             
             {productData.thumbnailUrl && !uploadingImage && (
               <div className="mt-2">
-                <img src={productData.thumbnailUrl} alt="Preview" className="w-full h-auto max-h-48 object-cover rounded shadow" />
-                <p className="text-xs mt-1 break-all text-text-color-secondary">{productData.thumbnailUrl}</p>
+                <img src={productData.thumbnailUrl} alt="Preview" className="w-full h-auto max-h-48 object-cover rounded-lg shadow-sm" />
+                <p className="text-[10px] mt-1 break-all text-text-color-secondary">{productData.thumbnailUrl}</p>
               </div>
             )}
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-6 mt-2">
+          <div className="flex flex-col sm:flex-row gap-6 mt-2 bg-surface-ground p-4 rounded-xl">
             <div className="flex items-center gap-2">
               <InputSwitch checked={productData.isPublished} onChange={(e) => setProductData({...productData, isPublished: e.value})} />
-              <label>Published (Tampil)</label>
+              <label className="text-sm font-medium">Published (Tampil)</label>
             </div>
             <div className="flex items-center gap-2">
               <InputSwitch checked={productData.isFeatured} onChange={(e) => setProductData({...productData, isFeatured: e.value})} />
-              <label>Tampil di Beranda</label>
+              <label className="text-sm font-medium">Tampil di Beranda</label>
             </div>
           </div>
 
-          <div className="flex justify-end gap-2 mt-6">
-            <Button label="Batal" icon="pi pi-times" outlined onClick={() => setDialogVisible(false)} />
-            <Button label="Simpan" icon="pi pi-check" onClick={saveProduct} />
+          <div className="flex justify-end gap-3 mt-6 border-t border-surface-section pt-4">
+            <Button label="Batal" icon="pi pi-times" text onClick={() => setDialogVisible(false)} className="w-auto" />
+            <Button label="Simpan" icon="pi pi-check" onClick={saveProduct} className="w-auto px-8" />
           </div>
         </div>
       </Dialog>

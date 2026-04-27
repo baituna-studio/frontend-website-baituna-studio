@@ -10,6 +10,7 @@ import { InputTextarea } from 'primereact/inputtextarea';
 import { InputSwitch } from 'primereact/inputswitch';
 import { Dropdown } from 'primereact/dropdown';
 import { Toast } from 'primereact/toast';
+import AdminPageHeader from '@/components/admin/AdminPageHeader';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -122,47 +123,56 @@ export default function AdminTestimonialsPage() {
   };
 
   return (
-    <div className="p-8">
+    <div className="space-y-6">
       <Toast ref={toast} />
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-bold text-text-color">Manajemen Testimonials</h1>
-          <p className="text-text-color-secondary mt-1">Kelola ulasan pelanggan yang tampil di website.</p>
-        </div>
-        <Button label="Tambah Testimonial" icon="pi pi-plus" onClick={openNew} />
-      </div>
+      
+      <AdminPageHeader 
+        title="Manajemen Testimonials" 
+        description="Kelola ulasan pelanggan yang tampil di website." 
+        action={
+          <Button label="Tambah Testimonial" icon="pi pi-plus" onClick={openNew} />
+        }
+      />
 
-      <div className="bg-white p-6 rounded-2xl shadow-sm border border-surface-section">
-        <DataTable value={testimonials} loading={loading} paginator rows={10} emptyMessage="Belum ada ulasan.">
-          <Column field="name" header="Nama" sortable></Column>
+      <div className="bg-white p-6 rounded-2xl shadow-sm border border-surface-section overflow-hidden">
+        <DataTable 
+          value={testimonials} 
+          loading={loading} 
+          paginator 
+          rows={10} 
+          emptyMessage="Belum ada ulasan."
+          className="p-datatable-sm"
+          tableStyle={{ minWidth: '50rem' }}
+        >
+          <Column field="name" header="Nama" sortable className="font-bold"></Column>
           <Column field="role" header="Role"></Column>
           <Column field="rating" header="Bintang" body={(r) => `${r.rating} ⭐`}></Column>
           <Column field="product.title" header="Produk" body={(r) => r.product?.title || 'Umum'}></Column>
-          <Column field="quote" header="Kutipan Ulasan" style={{ maxWidth: '300px' }} className="truncate"></Column>
-          <Column field="isPublished" header="Status" body={statusBodyTemplate}></Column>
+          <Column field="quote" header="Kutipan Ulasan" style={{ maxWidth: '300px' }} className="truncate text-text-color-secondary italic"></Column>
+          <Column field="isPublished" header="Status" body={statusBodyTemplate} sortable></Column>
           <Column body={actionBodyTemplate} style={{ minWidth: '8rem' }}></Column>
         </DataTable>
       </div>
 
-      <Dialog visible={dialogVisible} style={{ width: '500px' }} header={isEditing ? "Edit Testimonial" : "Tambah Testimonial"} modal onHide={() => setDialogVisible(false)}>
+      <Dialog visible={dialogVisible} style={{ width: '500px' }} header={isEditing ? "Edit Testimonial" : "Tambah Testimonial"} modal onHide={() => setDialogVisible(false)} className="p-fluid">
         <div className="flex flex-col gap-4 mt-2">
           <div className="flex flex-col gap-2">
-            <label className="font-semibold">Nama Pelanggan</label>
+            <label className="font-semibold text-sm">Nama Pelanggan</label>
             <InputText value={testiData.name} onChange={(e) => setTestiData({...testiData, name: e.target.value})} />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-semibold">Role / Pekerjaan (Opsional)</label>
+            <label className="font-semibold text-sm">Role / Pekerjaan (Opsional)</label>
             <InputText value={testiData.role || ''} onChange={(e) => setTestiData({...testiData, role: e.target.value})} placeholder="Owner @brandanda" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div className="flex flex-col gap-2">
-              <label className="font-semibold">Rating (1-5)</label>
+              <label className="font-semibold text-sm">Rating (1-5)</label>
               <InputText type="number" min="1" max="5" value={testiData.rating} onChange={(e) => setTestiData({...testiData, rating: parseInt(e.target.value) || 5})} />
             </div>
             <div className="flex flex-col gap-2">
-              <label className="font-semibold">Produk Terkait</label>
+              <label className="font-semibold text-sm">Produk Terkait</label>
               <Dropdown 
                 value={testiData.productId} 
                 onChange={(e) => setTestiData({...testiData, productId: e.value})} 
@@ -176,18 +186,18 @@ export default function AdminTestimonialsPage() {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="font-semibold">Isi Ulasan</label>
-            <InputTextarea value={testiData.quote} onChange={(e) => setTestiData({...testiData, quote: e.target.value})} rows={4} />
+            <label className="font-semibold text-sm">Isi Ulasan</label>
+            <InputTextarea value={testiData.quote} onChange={(e) => setTestiData({...testiData, quote: e.target.value})} rows={4} autoResize />
           </div>
 
-          <div className="flex items-center gap-2 mt-2">
+          <div className="flex items-center gap-2 mt-2 bg-surface-ground p-4 rounded-xl">
             <InputSwitch checked={testiData.isPublished} onChange={(e) => setTestiData({...testiData, isPublished: e.value})} />
-            <label>Tampilkan di Website</label>
+            <label className="text-sm font-medium">Tampilkan di Website</label>
           </div>
 
-          <div className="flex justify-end gap-2 mt-6">
-            <Button label="Batal" icon="pi pi-times" outlined onClick={() => setDialogVisible(false)} />
-            <Button label="Simpan" icon="pi pi-check" onClick={saveTesti} />
+          <div className="flex justify-end gap-3 mt-6 border-t border-surface-section pt-4">
+            <Button label="Batal" icon="pi pi-times" text onClick={() => setDialogVisible(false)} className="w-auto" />
+            <Button label="Simpan" icon="pi pi-check" onClick={saveTesti} className="w-auto px-8" />
           </div>
         </div>
       </Dialog>
